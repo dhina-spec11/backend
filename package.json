@@ -1,0 +1,17 @@
+{
+  "name": "formstudio-backend",
+  "version": "1.0.0",
+  "description": "FormStudio backend server with MySQL database connection",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7"
+  }
+}
