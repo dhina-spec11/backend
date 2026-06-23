@@ -3,6 +3,8 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
+const https = require('https');
+const fs = require('fs');
 
 console.log("Loaded DB Config:");
 console.log("  Host:", process.env.DB_HOST);
@@ -350,6 +352,24 @@ app.get('/api/network-ip', (req, res) => {
   res.json({ ip: ipAddress });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.USE_HTTPS === 'true') {
+  try {
+    const privateKey = fs.readFileSync(path.join(__dirname, 'key.pem'), 'utf8');
+    const certificate = fs.readFileSync(path.join(__dirname, 'cert.pem'), 'utf8');
+    const credentials = { key: privateKey, cert: certificate };
+
+    const secureServer = https.createServer(credentials, app);
+    secureServer.listen(PORT, () => {
+      console.log(`Secure Server is running on https://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Error starting HTTPS server, starting HTTP fallback...", error);
+    app.listen(PORT, () => {
+      console.log(`HTTP Server is running on http://localhost:${PORT}`);
+    });
+  }
+} else {
+  app.listen(PORT, () => {
+    console.log(`HTTP Server is running on http://localhost:${PORT}`);
+  });
+}
