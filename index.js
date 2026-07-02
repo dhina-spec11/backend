@@ -204,7 +204,7 @@ app.delete('/api/forms/:id', async (req, res) => {
 app.post('/api/forms/:id/responses', async (req, res) => {
   const formId = req.params.id;
   const responseData = req.body;
-  const id = `resp-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+  const id = `resp-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const submittedAt = new Date().toISOString();
   try {
     const responseDataStr = JSON.stringify(responseData);
@@ -298,25 +298,25 @@ app.get('/api/network-ip', (req, res) => {
   const os = require('os');
   const interfaces = os.networkInterfaces();
   let ipAddress = 'localhost';
-  
+
   // Sort interfaces to prioritize Wi-Fi and physical Ethernet
   const interfaceNames = Object.keys(interfaces).sort((a, b) => {
     const aLower = a.toLowerCase();
     const bLower = b.toLowerCase();
-    
+
     const aIsWifi = aLower.includes('wi-fi') || aLower.includes('wifi') || aLower.includes('wireless');
     const bIsWifi = bLower.includes('wi-fi') || bLower.includes('wifi') || bLower.includes('wireless');
     if (aIsWifi && !bIsWifi) return -1;
     if (!aIsWifi && bIsWifi) return 1;
-    
+
     const aIsEth = aLower.includes('ethernet');
     const bIsEth = bLower.includes('ethernet');
     if (aIsEth && !bIsEth) return -1;
     if (!aIsEth && bIsEth) return 1;
-    
+
     return 0;
   });
-  
+
   const virtualKeywords = ['virtual', 'vbox', 'vmware', 'vmnet', 'vethernet', 'host-only'];
   for (const interfaceName of interfaceNames) {
     const isVirtual = virtualKeywords.some(kw => interfaceName.toLowerCase().includes(kw));
@@ -327,7 +327,7 @@ app.get('/api/network-ip', (req, res) => {
       if (addressInfo.family === 'IPv4' && !addressInfo.internal) {
         // Exclude common VirtualBox host-only network adapter range
         if (addressInfo.address.startsWith('192.168.56.')) continue;
-        
+
         ipAddress = addressInfo.address;
         break;
       }
@@ -348,7 +348,7 @@ app.get('/api/network-ip', (req, res) => {
       if (ipAddress !== 'localhost') break;
     }
   }
-  
+
   res.json({ ip: ipAddress });
 });
 
