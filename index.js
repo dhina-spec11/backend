@@ -373,3 +373,5 @@ if (process.env.USE_HTTPS === 'true') {
     console.log(`HTTP Server is running on http://localhost:${PORT}`);
   });
 }
+
+module.exports = app;
